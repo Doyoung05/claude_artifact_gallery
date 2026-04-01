@@ -1,0 +1,236 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+#app{min-height:100vh;background:var(--bg-page);transition:background 0.3s,color 0.3s}
+
+#app.light{--bg-page:#f5f3ee;--bg-surface:#fff;--bg-sidebar:#ebebeb;--bg-chip-active:#1a1a1a;--text-chip-active:#fff;--text-primary:#1a1a1a;--text-secondary:#666;--text-muted:#999;--border:#e0ddd6;--border-hover:#bbb;--new-btn-bg:#1a1a1a;--new-btn-color:#fff;--tab-active-border:#1a1a1a;--filter-bg:#fff;--filter-color:#666;--card-bg:#fff;--sidebar-bg:#ebebeb;--avatar-bg:#1a1a1a;--avatar-color:#fff;--first-app-bg:#fff;--first-app-color:#1a1a1a;--first-app-border:#ccc}
+#app.dark{--bg-page:#111;--bg-surface:#1e1e1e;--bg-sidebar:#181818;--bg-chip-active:#fff;--text-chip-active:#111;--text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--border:#2e2e2e;--border-hover:#555;--new-btn-bg:#f0f0f0;--new-btn-color:#111;--tab-active-border:#f0f0f0;--filter-bg:#1e1e1e;--filter-color:#aaa;--card-bg:#1e1e1e;--sidebar-bg:#181818;--avatar-bg:#f0f0f0;--avatar-color:#111;--first-app-bg:#2a2a2a;--first-app-color:#ddd;--first-app-border:#444}
+
+.sidebar{position:fixed;left:0;top:0;height:100%;width:52px;background:var(--sidebar-bg);border-right:0.5px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;z-index:10;transition:background 0.3s,border-color 0.3s}
+.sidebar-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;color:var(--text-secondary);border:none;background:transparent;font-size:16px;transition:background 0.15s,color 0.3s}
+.sidebar-btn:hover{background:var(--bg-surface)}
+.sidebar-btn.active{background:var(--bg-surface);color:var(--text-primary)}
+.first-app-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;border:0.5px solid var(--first-app-border);background:var(--first-app-bg);color:var(--first-app-color);font-size:9px;font-weight:500;text-align:center;line-height:1.2;transition:all 0.3s;margin-bottom:6px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--avatar-bg);color:var(--avatar-color);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;cursor:pointer;transition:background 0.3s,color 0.3s}
+
+.main{margin-left:52px;padding:32px 40px;min-height:100vh;transition:background 0.3s}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.page-title{font-size:22px;font-weight:500;color:var(--text-primary);transition:color 0.3s}
+
+.header-right{display:flex;align-items:center;gap:12px}
+.theme-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;border:0.5px solid var(--border);background:var(--bg-surface);color:var(--text-primary);transition:all 0.3s;font-size:17px}
+.theme-btn:hover{border-color:var(--border-hover)}
+
+.new-btn{background:var(--new-btn-bg);color:var(--new-btn-color);border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.3s}
+.new-btn:hover{opacity:0.85}
+
+.tabs{display:flex;margin-bottom:20px;border-bottom:0.5px solid var(--border);transition:border-color 0.3s}
+.tab{padding:8px 0;margin-right:24px;font-size:14px;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-0.5px;transition:color 0.3s}
+.tab.active{color:var(--text-primary);border-bottom-color:var(--tab-active-border)}
+
+.filters{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.filter-chip{padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:0.5px solid var(--border);background:var(--filter-bg);color:var(--filter-color);transition:all 0.3s}
+.filter-chip.active{background:var(--bg-chip-active);color:var(--text-chip-active);border-color:var(--bg-chip-active)}
+.filter-chip:hover:not(.active){border-color:var(--border-hover)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.card{background:var(--card-bg);border-radius:12px;border:0.5px solid var(--border);overflow:hidden;cursor:pointer;transition:border-color 0.15s,transform 0.15s,background 0.3s}
+.card:hover{border-color:var(--border-hover);transform:translateY(-2px)}
+.card-body{padding:12px 14px}
+.card-title{font-size:14px;color:var(--text-primary);transition:color 0.3s}
+.card-thumb{height:160px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+.thumb-writing{background:#2d2d2d;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:20px}
+.highlight-box{background:#4ade80;color:#1a1a1a;font-size:13px;font-weight:500;padding:3px 8px;border-radius:3px}
+.thumb-prd{background:#dbeafe;width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:20px}
+.prd-box{background:#fff;border-radius:6px;padding:8px 12px;font-size:11px;font-weight:600;color:#1e40af;border:0.5px solid #bfdbfe}
+.prd-wireframe{background:#93c5fd;border-radius:6px;width:80px;height:70px;display:flex;align-items:flex-end;justify-content:flex-end;padding:6px}
+.prd-btn{background:#3b82f6;width:36px;height:10px;border-radius:3px}
+.thumb-slack{background:#e8e4ff;width:100%;height:100%;padding:16px;display:flex;flex-direction:column;gap:8px}
+.slack-search{background:#fff;border-radius:6px;padding:6px 10px;font-size:11px;display:flex;align-items:center;gap:6px;color:#555}
+.slack-tag{background:#c4b5fd;border-radius:4px;padding:4px 8px;font-size:10px;color:#4c1d95}
+.thumb-notes{background:#d1fae5;width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:16px;padding:20px}
+.note-line{height:3px;background:#6ee7b7;border-radius:2px}
+.note-bullet{height:2px;background:#10b981;border-radius:2px}
+.thumb-brainstorm{background:#7dd3fc;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.cloud{background:#fff;border-radius:50%;padding:18px 24px;font-size:22px;color:#0284c7}
+.thumb-flashcard{background:#0d9488;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.fc-back{background:#fff;border-radius:6px;padding:10px 16px;font-size:15px;transform:rotate(-6deg);margin-right:-10px;color:#333}
+.fc-front{background:#f0fdf4;border-radius:6px;padding:10px 16px;font-size:15px;transform:rotate(4deg);color:#166534;border:0.5px solid #bbf7d0}
+.thumb-code{background:#1a1a1a;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.code-label{color:#fff;font-size:16px;font-weight:600;letter-spacing:0.5px}
+.thumb-terminal{background:#111;width:100%;height:100%;padding:16px;display:flex;align-items:center}
+.terminal-text{color:#4ade80;font-family:var(--font-mono);font-size:13px}
+.thumb-portrait{background:#f3f0e8;width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:16px;padding:16px}
+.portrait-card{background:#fff;border-radius:6px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.portrait-avatar{width:32px;height:32px;border-radius:50%;background:#e5e7eb}
+</style>
+
+<div id="app" class="light">
+  <div class="sidebar">
+    <div class="sidebar-btn" style="font-size:18px">+</div>
+    <div class="sidebar-btn" style="margin-top:8px">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    <div class="sidebar-btn">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </div>
+    <div class="sidebar-btn">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="sidebar-btn active">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+    </div>
+    <div class="sidebar-btn">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    </div>
+    <div class="sidebar-btn" style="margin-top:auto">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </div>
+    <div class="first-app-btn" onclick="sendPrompt('첫 번째 앱을 만들어줘')" title="first app">first app</div>
+    <div class="avatar">김</div>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1 class="page-title">아티팩트</h1>
+      <div class="header-right">
+        <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="테마 전환">🌙</button>
+        <button class="new-btn" onclick="sendPrompt('새 아티팩트를 만들어줘')">새 아티팩트 ↗</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'inspiration')">영감</div>
+      <div class="tab" onclick="switchTab(this,'mine')">내 아티팩트</div>
+    </div>
+
+    <div class="filters">
+      <div class="filter-chip active" onclick="filterCards(this,'all')">전체</div>
+      <div class="filter-chip" onclick="filterCards(this,'learn')">새로운 것 배우기</div>
+      <div class="filter-chip" onclick="filterCards(this,'hack')">라이프 핵</div>
+      <div class="filter-chip" onclick="filterCards(this,'game')">게임하기</div>
+      <div class="filter-chip" onclick="filterCards(this,'creative')">창의적으로 생각하기</div>
+      <div class="filter-chip" onclick="filterCards(this,'relax')">휴식하기</div>
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="card" data-cat="hack" onclick="sendPrompt('글쓰기 에디터 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-writing">
+          <div style="font-size:10px;color:#888;margin-bottom:4px">me and my colleague</div>
+          <div class="highlight-box">my colleague and I</div>
+          <div style="color:#aaa;font-size:10px;line-height:1.5;text-align:left;width:100%;margin-top:8px">Use 'I' instead of 'me' as the subject, put the other person first, and correct the spelling of 'colleague'</div>
+          <div style="display:flex;flex-direction:column;gap:3px;margin-top:8px;width:100%">
+            <div style="height:2px;background:#444;border-radius:2px;width:90%"></div>
+            <div style="height:2px;background:#444;border-radius:2px;width:75%"></div>
+            <div style="height:2px;background:#444;border-radius:2px;width:85%"></div>
+          </div>
+        </div></div>
+        <div class="card-body"><div class="card-title">글쓰기 에디터</div></div>
+      </div>
+
+      <div class="card" data-cat="hack" onclick="sendPrompt('PRD를 프로토타입으로 변환하는 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-prd">
+          <div class="prd-box">PRD</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <div class="prd-wireframe"><div class="prd-btn"></div></div>
+        </div></div>
+        <div class="card-body"><div class="card-title">PRD를 프로토타입으로</div></div>
+      </div>
+
+      <div class="card" data-cat="hack" onclick="sendPrompt('Slack 프로젝트 인사이트 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-slack">
+          <div class="slack-search">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            onboarding
+          </div>
+          <div class="slack-tag"># ux-feedback</div>
+          <div class="slack-tag"># proj-onboarding</div>
+        </div></div>
+        <div class="card-body"><div class="card-title">Slack 프로젝트 인사이트</div></div>
+      </div>
+
+      <div class="card" data-cat="hack" onclick="sendPrompt('원시 노트 변환기 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-notes" style="background:#d1fae5;width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:16px;padding:20px">
+          <div style="width:60px;display:flex;flex-direction:column;gap:4px">
+            <div class="note-line" style="width:80%"></div>
+            <div class="note-line" style="width:60%;background:#9ca3af"></div>
+            <div class="note-line" style="width:75%"></div>
+            <div class="note-line" style="width:50%;background:#9ca3af"></div>
+          </div>
+          <div style="font-size:18px;color:#059669">→</div>
+          <div style="width:70px;display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;align-items:center;gap:4px"><div style="width:4px;height:4px;border-radius:50%;background:#10b981"></div><div class="note-bullet" style="width:50px"></div></div>
+            <div style="display:flex;align-items:center;gap:4px"><div style="width:4px;height:4px;border-radius:50%;background:#10b981"></div><div class="note-bullet" style="width:40px"></div></div>
+            <div style="display:flex;align-items:center;gap:4px"><div style="width:4px;height:4px;border-radius:50%;background:#10b981"></div><div class="note-bullet" style="width:55px"></div></div>
+          </div>
+        </div></div>
+        <div class="card-body"><div class="card-title">원시 노트 변환기</div></div>
+      </div>
+
+      <div class="card" data-cat="creative" onclick="sendPrompt('브레인스토밍 아이디어 생성기 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-brainstorm"><div class="cloud">?</div></div></div>
+        <div class="card-body"><div class="card-title">브레인스토밍 아이디어 생성기</div></div>
+      </div>
+
+      <div class="card" data-cat="learn" onclick="sendPrompt('플래시카드 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-flashcard">
+          <div class="fc-back">你好</div>
+          <div class="fc-front">hola</div>
+        </div></div>
+        <div class="card-body"><div class="card-title">플래시카드</div></div>
+      </div>
+
+      <div class="card" data-cat="hack" onclick="sendPrompt('CodeVerter 코드 변환 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-code"><div class="code-label">CodeVerter</div></div></div>
+        <div class="card-body"><div class="card-title">CodeVerter</div></div>
+      </div>
+
+      <div class="card" data-cat="learn" onclick="sendPrompt('터미널 에뮬레이터 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-terminal"><div class="terminal-text">Hello, World!</div></div></div>
+        <div class="card-body"><div class="card-title">터미널 에뮬레이터</div></div>
+      </div>
+
+      <div class="card" data-cat="creative" onclick="sendPrompt('인물 카드 아티팩트를 만들어줘')">
+        <div class="card-thumb"><div class="thumb-portrait">
+          <div class="portrait-card">
+            <div class="portrait-avatar"></div>
+            <div style="height:2px;background:#e5e7eb;border-radius:1px;width:40px"></div>
+            <div style="height:2px;background:#e5e7eb;border-radius:1px;width:30px"></div>
+          </div>
+          <div class="portrait-card">
+            <div class="portrait-avatar" style="background:#d1d5db"></div>
+            <div style="height:2px;background:#e5e7eb;border-radius:1px;width:40px"></div>
+            <div style="height:2px;background:#e5e7eb;border-radius:1px;width:30px"></div>
+          </div>
+        </div></div>
+        <div class="card-body"><div class="card-title">인물 프로필 카드</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let dark = false;
+function toggleTheme() {
+  dark = !dark;
+  const app = document.getElementById('app');
+  const btn = document.getElementById('themeBtn');
+  app.classList.toggle('dark', dark);
+  app.classList.toggle('light', !dark);
+  btn.textContent = dark ? '☀️' : '🌙';
+}
+function switchTab(el, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if(tab === 'mine') sendPrompt('내 아티팩트 목록을 보여줘');
+}
+function filterCards(el, cat) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'block' : 'none';
+  });
+}
+</script>
